@@ -1,23 +1,9 @@
 name: Check In
-
 on:
   workflow_dispatch:
 
 jobs:
-  del_runs:
+  probe:
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: read
     steps:
-      - name: Delete old workflow runs
-        uses: Mattraks/delete-workflow-runs@v2.0.6
-        with:
-          token: $ github.token 
-          repository: $ github.repository 
-          retain_days: 30                    # 保留近 30 天
-          keep_minimum_runs: 1               # 至少保留 1 条，避免清空
-          delete_workflow_by_state_pattern: "completed"
-          delete_run_by_conclusion_pattern: "success|failure|cancelled"
-          # 如需避免清理本工作流本身，可加上下一行正则（可选）：
-          # delete_workflow_by_name_regex: "^(?!Check In$).*"
+      - run: echo "probe"
