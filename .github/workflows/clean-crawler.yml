@@ -1,12 +1,5 @@
 name: Check In
 
-# ✅ 签到续期：运行此 workflow 可重置 7 天计时，保持 "Get Hot News" 正常运行
-# ✅ Renewal: Run this workflow to reset the 7-day timer and keep "Get Hot News" active
-#
-# 📌 操作方法 / How to use:
-#   1. 点击 "Run workflow" 按钮 / Click "Run workflow" button
-#   2. 每 7 天内至少运行一次 / Run at least once every 7 days
-
 on:
   workflow_dispatch:
 
@@ -17,12 +10,14 @@ jobs:
       actions: write
       contents: read
     steps:
-      - name: Delete all workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
+      - name: Delete old workflow runs
+        uses: Mattraks/delete-workflow-runs@v2.0.6
         with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 0
-          keep_minimum_runs: 0
-          delete_workflow_by_state_pattern: "ALL"
-          delete_run_by_conclusion_pattern: "ALL"
+          token: $ github.token 
+          repository: $ github.repository 
+          retain_days: 30                    # 保留近 30 天
+          keep_minimum_runs: 1               # 至少保留 1 条，避免清空
+          delete_workflow_by_state_pattern: "completed"
+          delete_run_by_conclusion_pattern: "success|failure|cancelled"
+          # 如需避免清理本工作流本身，可加上下一行正则（可选）：
+          # delete_workflow_by_name_regex: "^(?!Check In$).*"
